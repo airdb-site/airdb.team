@@ -19,7 +19,8 @@ pnpm build
 
 ## 目录
 
-- `src/pages/index.astro`：首页内容、成员数据与交互
+- `src/pages/index.astro`：首页结构与交互
+- `src/data/team.ts`：领域、成员和能力示例数据
 - `src/styles/global.css`：全局设计系统与响应式样式
 - `static/images/team/`：站点使用的团队图像
 - `images/`：设计概念与视觉基准

@@ -1,39 +1,9 @@
 ---
 import "../styles/global.css";
+import { capabilities, domains, members } from "../data/team";
 
-const fields = [
-  { id: "all", label: "全部领域" },
-  { id: "ai", label: "人工智能" },
-  { id: "bio", label: "生物科技" },
-  { id: "aero", label: "航空航天" },
-  { id: "ocean", label: "航海科技" },
-  { id: "materials", label: "先进材料" },
-  { id: "health", label: "医疗健康" },
-];
-
-const frontierDomains = [
-  "人工智能", "生物科技", "航空航天", "航海科技", "先进材料", "医疗健康",
-  "机器人", "量子计算", "半导体", "清洁能源", "核聚变", "神经科技",
-  "农业科技", "网络安全", "空间资源", "地理空间", "工业设计", "气候科技",
-];
-
-const members = [
-  { name: "林澄", company: "VECTOR INTELLIGENCE", role: "AI Systems Researcher", field: "ai", place: "Singapore", focus: "多模态智能 · 自主系统", portrait: "p1" },
-  { name: "Arjun Mehta", company: "ORBITAL FOUNDRY", role: "Aerospace Engineer", field: "aero", place: "Bengaluru", focus: "新型推进 · 飞行器制造", portrait: "p2" },
-  { name: "Amara Okafor", company: "HELIX ONE", role: "Biotech Founder", field: "bio", place: "Boston", focus: "合成生物 · 精准诊断", portrait: "p3" },
-  { name: "Elias North", company: "PELAGIC SYSTEMS", role: "Marine Roboticist", field: "ocean", place: "Oslo", focus: "水下机器人 · 海洋观测", portrait: "p4" },
-  { name: "王恺", company: "LATTICE MATTER", role: "Materials Scientist", field: "materials", place: "Shanghai", focus: "超材料 · 先进制造", portrait: "p5" },
-  { name: "Noor Al-Sayed", company: "CLINICA NEXT", role: "MedTech Founder", field: "health", place: "Dubai", focus: "数字医疗 · 临床智能", portrait: "p6" },
-];
-
-const capabilities = [
-  { name: "人工智能", en: "AI & INTELLIGENCE", value: 42, tone: "blue" },
-  { name: "生物科技", en: "BIOTECH", value: 21, tone: "coral" },
-  { name: "航空航天", en: "AEROSPACE", value: 18, tone: "dark" },
-  { name: "航海科技", en: "OCEAN SYSTEMS", value: 14, tone: "pale" },
-  { name: "先进材料", en: "MATERIALS", value: 17, tone: "blue" },
-  { name: "医疗健康", en: "MEDTECH", value: 23, tone: "coral" },
-];
+const filters = [{ id: "all", label: "全部领域" }, ...domains];
+const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
 ---
 
 <!doctype html>
@@ -121,8 +91,10 @@ const capabilities = [
           <div class="map-index"><span>LIVING CAPABILITY NETWORK</span><b>06 / 18</b></div>
           <div class="cell-domain-ticker" aria-label="18 个前沿技术领域">
             <div class="domain-track">
-              {[...frontierDomains, ...frontierDomains].map((domain, index) => (
-                <span aria-hidden={index >= frontierDomains.length ? "true" : undefined}><i>{String((index % frontierDomains.length) + 1).padStart(2, "0")}</i>{domain}</span>
+              {[...domains, ...domains].map((domain, index) => (
+                <button type="button" data-jump={domain.id} aria-hidden={index >= domains.length ? "true" : undefined} tabindex={index >= domains.length ? "-1" : undefined}>
+                  <i>{String((index % domains.length) + 1).padStart(2, "0")}</i>{domain.label}
+                </button>
               ))}
             </div>
           </div>
@@ -140,12 +112,19 @@ const capabilities = [
           <div><span class="section-number">01</span><h2>认识网络中的人</h2></div>
           <p>发现每一家 OPC 背后的专业能力、研究方向与可协作领域。</p>
         </div>
+        <div class="directory-tools">
+          <label class="member-search" for="member-search">
+            <span>搜索成员、公司或专长</span>
+            <input id="member-search" type="search" placeholder="输入关键词" autocomplete="off" />
+          </label>
+          <p class="result-count" aria-live="polite">{members.length} 个示例档案</p>
+        </div>
         <div class="filters" role="group" aria-label="按技术领域筛选成员">
-          {fields.map((field, index) => <button class:list={[index === 0 && "active"]} data-filter={field.id}>{field.label}</button>)}
+          {filters.map((field, index) => <button class:list={[index === 0 && "active"]} data-filter={field.id}>{field.label}</button>)}
         </div>
         <div class="member-grid" aria-live="polite">
           {members.map((member, index) => (
-            <article class="member" data-field={member.field} data-index={index}>
+            <article class="member" data-field={member.field} data-index={index} data-search={`${member.name} ${member.company} ${member.role} ${member.place} ${member.focus}`.toLowerCase()}>
               <button class="member-open" aria-label={`查看 ${member.name} 的详细资料`}>
                 <span class:list={["portrait", member.portrait]} aria-hidden="true"></span>
                 <span class="member-topline"><b>{member.company}</b><i>0{index + 1}</i></span>
@@ -157,6 +136,12 @@ const capabilities = [
             </article>
           ))}
         </div>
+        <div class="empty-state" hidden>
+          <span>NO MATCHING OPC</span>
+          <h3>这个领域正在等待第一位成员。</h3>
+          <p>你可以浏览其他领域，或者成为这个能力节点的创建者。</p>
+          <button type="button" data-reset-directory>查看全部成员</button>
+        </div>
         <p class="sample-note">第一版使用示例成员档案，用于确认信息结构与视觉方向。</p>
       </section>
 
@@ -167,12 +152,12 @@ const capabilities = [
         </div>
         <div class="capability-bars">
           {capabilities.map((item, index) => (
-            <button class={`capability-row ${item.tone}`} data-jump={fields[index + 1].id}>
+            <button class={`capability-row ${tones[index]}`} data-jump={item.id}>
               <span class="capability-index">0{index + 1}</span>
               <strong>{item.name}</strong>
               <span>{item.en}</span>
-              <i style={`--size:${item.value}%`}></i>
-              <b>{item.value}</b>
+              <i style={`--size:${item.count}%`}></i>
+              <b>{item.count}</b>
             </button>
           ))}
         </div>
@@ -194,15 +179,15 @@ const capabilities = [
       </section>
 
       <section class="join-section">
-        <p>如果你正在独立构建前沿技术，<br />我们想认识你。</p>
-        <a href="mailto:team@airdb.com">加入 AIRDB Team <span aria-hidden="true">→</span></a>
+        <p><span>如果你正在独立构建前沿技术，</span><span>我们想认识你。</span></p>
+        <a href="mailto:team@airdb.team">加入 AIRDB Team <span aria-hidden="true">→</span></a>
       </section>
     </main>
 
     <footer>
       <a class="brand brand-footer" href="#top"><strong>AIRDB</strong><span>/</span><em>TEAM</em></a>
       <p>Independent by design.<br />Connected by ambition.</p>
-      <div><a href="#people">成员目录</a><a href="#capabilities">能力地图</a><a href="mailto:team@airdb.com">联系我们</a></div>
+      <div><a href="#people">成员目录</a><a href="#capabilities">能力地图</a><a href="mailto:team@airdb.team">联系我们</a></div>
       <small>© 2026 AIRDB Team</small>
     </footer>
 
@@ -214,7 +199,7 @@ const capabilities = [
         <h2 class="dialog-name"></h2>
         <p class="dialog-role"></p>
         <dl><div><dt>所在地</dt><dd class="dialog-place"></dd></div><div><dt>专长</dt><dd class="dialog-focus"></dd></div></dl>
-        <a href="mailto:team@airdb.com">发起协作 <span>→</span></a>
+        <a href="mailto:team@airdb.team">发起协作 <span>→</span></a>
       </div>
     </dialog>
 
@@ -222,19 +207,45 @@ const capabilities = [
       const filterButtons = document.querySelectorAll('[data-filter]');
       const cards = document.querySelectorAll('.member');
       const peopleSection = document.querySelector('#people');
+      const searchInput = document.querySelector('#member-search');
+      const emptyState = document.querySelector('.empty-state');
+      const resultCount = document.querySelector('.result-count');
+      let activeField = 'all';
+      let query = '';
+
+      function updateDirectory() {
+        let visibleCount = 0;
+        cards.forEach((card) => {
+          const fieldMatches = activeField === 'all' || card.dataset.field === activeField;
+          const searchMatches = !query || card.dataset.search.includes(query);
+          card.hidden = !(fieldMatches && searchMatches);
+          if (!card.hidden) visibleCount += 1;
+        });
+        filterButtons.forEach((button) => button.classList.toggle('active', button.dataset.filter === activeField));
+        emptyState.hidden = visibleCount > 0;
+        resultCount.textContent = `${visibleCount} 个匹配档案`;
+      }
 
       function selectField(field) {
-        filterButtons.forEach((button) => button.classList.toggle('active', button.dataset.filter === field));
-        cards.forEach((card) => {
-          card.hidden = field !== 'all' && card.dataset.field !== field;
-        });
+        activeField = field;
+        query = '';
+        searchInput.value = '';
+        updateDirectory();
       }
 
       filterButtons.forEach((button) => button.addEventListener('click', () => selectField(button.dataset.filter)));
-      document.querySelectorAll('[data-jump]').forEach((button) => button.addEventListener('click', () => {
-        selectField(button.dataset.jump);
+      searchInput?.addEventListener('input', (event) => {
+        activeField = 'all';
+        query = event.currentTarget.value.trim().toLowerCase();
+        updateDirectory();
+      });
+      document.querySelector('[data-reset-directory]')?.addEventListener('click', () => selectField('all'));
+      document.addEventListener('click', (event) => {
+        const jumpTarget = event.target.closest('[data-jump]');
+        if (!jumpTarget) return;
+        selectField(jumpTarget.dataset.jump);
         peopleSection?.scrollIntoView({ behavior: 'smooth' });
-      }));
+      });
 
       const dialog = document.querySelector('.member-dialog');
       const dialogPortrait = dialog?.querySelector('.dialog-portrait');
