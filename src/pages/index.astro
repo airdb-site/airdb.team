@@ -1,0 +1,255 @@
+---
+import "../styles/global.css";
+
+const fields = [
+  { id: "all", label: "全部领域" },
+  { id: "ai", label: "人工智能" },
+  { id: "bio", label: "生物科技" },
+  { id: "aero", label: "航空航天" },
+  { id: "ocean", label: "航海科技" },
+  { id: "materials", label: "先进材料" },
+  { id: "health", label: "医疗健康" },
+];
+
+const frontierDomains = [
+  "人工智能", "生物科技", "航空航天", "航海科技", "先进材料", "医疗健康",
+  "机器人", "量子计算", "半导体", "清洁能源", "核聚变", "神经科技",
+  "农业科技", "网络安全", "空间资源", "地理空间", "工业设计", "气候科技",
+];
+
+const members = [
+  { name: "林澄", company: "VECTOR INTELLIGENCE", role: "AI Systems Researcher", field: "ai", place: "Singapore", focus: "多模态智能 · 自主系统", portrait: "p1" },
+  { name: "Arjun Mehta", company: "ORBITAL FOUNDRY", role: "Aerospace Engineer", field: "aero", place: "Bengaluru", focus: "新型推进 · 飞行器制造", portrait: "p2" },
+  { name: "Amara Okafor", company: "HELIX ONE", role: "Biotech Founder", field: "bio", place: "Boston", focus: "合成生物 · 精准诊断", portrait: "p3" },
+  { name: "Elias North", company: "PELAGIC SYSTEMS", role: "Marine Roboticist", field: "ocean", place: "Oslo", focus: "水下机器人 · 海洋观测", portrait: "p4" },
+  { name: "王恺", company: "LATTICE MATTER", role: "Materials Scientist", field: "materials", place: "Shanghai", focus: "超材料 · 先进制造", portrait: "p5" },
+  { name: "Noor Al-Sayed", company: "CLINICA NEXT", role: "MedTech Founder", field: "health", place: "Dubai", focus: "数字医疗 · 临床智能", portrait: "p6" },
+];
+
+const capabilities = [
+  { name: "人工智能", en: "AI & INTELLIGENCE", value: 42, tone: "blue" },
+  { name: "生物科技", en: "BIOTECH", value: 21, tone: "coral" },
+  { name: "航空航天", en: "AEROSPACE", value: 18, tone: "dark" },
+  { name: "航海科技", en: "OCEAN SYSTEMS", value: 14, tone: "pale" },
+  { name: "先进材料", en: "MATERIALS", value: 17, tone: "blue" },
+  { name: "医疗健康", en: "MEDTECH", value: 23, tone: "coral" },
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="AIRDB Team 是由独立公司、前沿技术人才与专业能力组成的全球协作网络。" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>AIRDB Team — 前沿技术人才与独立公司网络</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.json" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="AIRDB Team 首页">
+        <strong>AIRDB</strong><span>/</span><em>TEAM</em>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#network">网络</a>
+        <a href="#people">成员</a>
+        <a href="#capabilities">能力</a>
+        <a href="#about">关于</a>
+      </nav>
+      <a class="header-action" href="#people">浏览成员 <span aria-hidden="true">↘</span></a>
+    </header>
+
+    <main id="top">
+      <section class="hero" id="network">
+        <div class="hero-copy">
+          <h1><span>汇聚独立</span><span>公司，</span><span>协作成为</span><span>一体。</span></h1>
+          <p>AIRDB Team 将独立创造者、技术专家与创始人公司连接成一个可信赖的全球前沿技术网络。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#people">探索团队网络 <span aria-hidden="true">→</span></a>
+            <a class="button button-quiet" href="#about">了解协作方式 <span aria-hidden="true">↘</span></a>
+          </div>
+          <dl class="hero-stats">
+            <div><dt>240<sup>+</sup></dt><dd>独立公司</dd></div>
+            <div><dt>32</dt><dd>国家与地区</dd></div>
+            <div><dt>18</dt><dd>前沿技术领域</dd></div>
+          </dl>
+        </div>
+
+        <div class="network-map cell-map" aria-label="AIRDB Team 细胞式能力网络示意图">
+          <svg class="cell-field" viewBox="0 0 760 650" aria-hidden="true">
+            <defs>
+              <radialGradient id="cell-blue" cx="42%" cy="38%" r="70%">
+                <stop offset="0" stop-color="#eef2ff" />
+                <stop offset="1" stop-color="#ffffff" />
+              </radialGradient>
+              <radialGradient id="cell-coral" cx="45%" cy="42%" r="70%">
+                <stop offset="0" stop-color="#fff1ed" />
+                <stop offset="1" stop-color="#ffffff" />
+              </radialGradient>
+            </defs>
+            <g class="cell-membranes">
+              <path class="cell cell-1" d="M43 180C42 105 101 48 177 50c75 2 123 61 118 135-4 58-48 103-104 115-72 16-147-43-148-120Z" />
+              <path class="cell cell-2" d="M282 134c23-64 93-103 159-78 67 25 95 101 66 164-25 54-88 82-145 63-65-22-105-81-80-149Z" />
+              <path class="cell cell-3 cell-warm" d="M205 303c9-72 72-119 143-112 74 7 124 70 113 143-9 63-65 108-128 106-73-3-137-64-128-137Z" />
+              <path class="cell cell-4" d="M483 246c34-59 111-80 170-43 58 37 73 114 35 170-34 51-103 68-157 38-64-35-83-103-48-165Z" />
+              <path class="cell cell-5" d="M54 420c18-68 87-110 155-88 66 21 102 92 78 157-21 58-84 93-145 78-70-18-107-78-88-147Z" />
+              <path class="cell cell-6 cell-warm" d="M293 465c17-70 88-111 157-91 70 21 107 94 82 162-22 61-88 93-150 75-68-20-107-78-89-146Z" />
+            </g>
+            <g class="cell-nuclei">
+              <circle cx="167" cy="170" r="39" /><circle cx="167" cy="170" r="26" />
+              <circle cx="402" cy="159" r="34" /><circle cx="402" cy="159" r="21" />
+              <circle cx="330" cy="321" r="43" /><circle cx="330" cy="321" r="27" />
+              <circle cx="587" cy="305" r="38" /><circle cx="587" cy="305" r="23" />
+              <circle cx="169" cy="461" r="36" /><circle cx="169" cy="461" r="22" />
+              <circle cx="413" cy="502" r="40" /><circle cx="413" cy="502" r="25" />
+            </g>
+            <g class="cell-vesicles">
+              <circle cx="90" cy="126" r="6" /><circle cx="232" cy="232" r="4" /><circle cx="340" cy="92" r="5" />
+              <circle cx="468" cy="234" r="7" /><circle cx="632" cy="218" r="5" /><circle cx="667" cy="344" r="3" />
+              <circle cx="101" cy="486" r="4" /><circle cx="238" cy="387" r="6" /><circle cx="361" cy="562" r="5" />
+              <circle cx="492" cy="455" r="4" /><circle cx="535" cy="525" r="7" /><circle cx="704" cy="283" r="4" />
+            </g>
+          </svg>
+          <button class="map-node node-ai" data-jump="ai"><span>VECTOR</span><strong>人工智能</strong></button>
+          <button class="map-node node-aero" data-jump="aero"><span>ORBITAL</span><strong>航空航天</strong></button>
+          <button class="map-node node-bio" data-jump="bio"><span>HELIX</span><strong>生物科技</strong></button>
+          <button class="map-node node-ocean" data-jump="ocean"><span>PELAGIC</span><strong>航海科技</strong></button>
+          <button class="map-node node-materials" data-jump="materials"><span>LATTICE</span><strong>先进材料</strong></button>
+          <button class="map-node node-health" data-jump="health"><span>CLINICA</span><strong>医疗健康</strong></button>
+          <div class="map-index"><span>LIVING CAPABILITY NETWORK</span><b>06 / 18</b></div>
+          <div class="cell-domain-ticker" aria-label="18 个前沿技术领域">
+            <div class="domain-track">
+              {[...frontierDomains, ...frontierDomains].map((domain, index) => (
+                <span aria-hidden={index >= frontierDomains.length ? "true" : undefined}><i>{String((index % frontierDomains.length) + 1).padStart(2, "0")}</i>{domain}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="intro-strip">
+        <h2>一张由独立公司组成的<br />全球技术能力地图</h2>
+        <p>每个节点都保持独立，基于共同标准进行跨学科协作。这里展示的不是层级，而是可以被发现、组合与信任的专业能力。</p>
+        <a href="#capabilities">查看能力分布 <span aria-hidden="true">→</span></a>
+      </section>
+
+      <section class="people-section" id="people">
+        <div class="section-header">
+          <div><span class="section-number">01</span><h2>认识网络中的人</h2></div>
+          <p>发现每一家 OPC 背后的专业能力、研究方向与可协作领域。</p>
+        </div>
+        <div class="filters" role="group" aria-label="按技术领域筛选成员">
+          {fields.map((field, index) => <button class:list={[index === 0 && "active"]} data-filter={field.id}>{field.label}</button>)}
+        </div>
+        <div class="member-grid" aria-live="polite">
+          {members.map((member, index) => (
+            <article class="member" data-field={member.field} data-index={index}>
+              <button class="member-open" aria-label={`查看 ${member.name} 的详细资料`}>
+                <span class:list={["portrait", member.portrait]} aria-hidden="true"></span>
+                <span class="member-topline"><b>{member.company}</b><i>0{index + 1}</i></span>
+                <span class="member-name">{member.name}</span>
+                <span class="member-role">{member.role}</span>
+                <span class="member-meta"><span>{member.place}</span><span>{member.focus}</span></span>
+                <span class="member-arrow" aria-hidden="true">↗</span>
+              </button>
+            </article>
+          ))}
+        </div>
+        <p class="sample-note">第一版使用示例成员档案，用于确认信息结构与视觉方向。</p>
+      </section>
+
+      <section class="capability-section" id="capabilities">
+        <div class="section-header capability-heading">
+          <div><span class="section-number">02</span><h2>前沿能力，按需组合</h2></div>
+          <p>从计算到生命科学，从天空到深海。AIRDB Team 让不同尺度的技术能力围绕真实问题快速形成协作单元。</p>
+        </div>
+        <div class="capability-bars">
+          {capabilities.map((item, index) => (
+            <button class={`capability-row ${item.tone}`} data-jump={fields[index + 1].id}>
+              <span class="capability-index">0{index + 1}</span>
+              <strong>{item.name}</strong>
+              <span>{item.en}</span>
+              <i style={`--size:${item.value}%`}></i>
+              <b>{item.value}</b>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section class="about-section" id="about">
+        <div class="about-manifesto">
+          <span>OUR OPERATING MODEL</span>
+          <h2>保持独立。<br />共享标准。<br /><em>共同抵达更远。</em></h2>
+        </div>
+        <div class="about-copy">
+          <p>AIRDB Team 不是传统的人员编制，而是一套面向独立公司的协作基础设施。每个成员可以专注于最擅长的领域，同时获得跨学科项目、知识网络与集团能力的支持。</p>
+          <ol>
+            <li><span>01</span><div><strong>独立经营</strong><p>每个 OPC 保持自己的专业方向、节奏与判断。</p></div></li>
+            <li><span>02</span><div><strong>可信连接</strong><p>用清晰档案、能力标签与共同标准降低协作成本。</p></div></li>
+            <li><span>03</span><div><strong>动态组队</strong><p>围绕复杂任务，把不同领域的顶尖能力组合起来。</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="join-section">
+        <p>如果你正在独立构建前沿技术，<br />我们想认识你。</p>
+        <a href="mailto:team@airdb.com">加入 AIRDB Team <span aria-hidden="true">→</span></a>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand brand-footer" href="#top"><strong>AIRDB</strong><span>/</span><em>TEAM</em></a>
+      <p>Independent by design.<br />Connected by ambition.</p>
+      <div><a href="#people">成员目录</a><a href="#capabilities">能力地图</a><a href="mailto:team@airdb.com">联系我们</a></div>
+      <small>© 2026 AIRDB Team</small>
+    </footer>
+
+    <dialog class="member-dialog">
+      <button class="dialog-close" aria-label="关闭成员资料">×</button>
+      <div class="dialog-portrait portrait p1"></div>
+      <div class="dialog-copy">
+        <span class="dialog-company"></span>
+        <h2 class="dialog-name"></h2>
+        <p class="dialog-role"></p>
+        <dl><div><dt>所在地</dt><dd class="dialog-place"></dd></div><div><dt>专长</dt><dd class="dialog-focus"></dd></div></dl>
+        <a href="mailto:team@airdb.com">发起协作 <span>→</span></a>
+      </div>
+    </dialog>
+
+    <script define:vars={{ members }}>
+      const filterButtons = document.querySelectorAll('[data-filter]');
+      const cards = document.querySelectorAll('.member');
+      const peopleSection = document.querySelector('#people');
+
+      function selectField(field) {
+        filterButtons.forEach((button) => button.classList.toggle('active', button.dataset.filter === field));
+        cards.forEach((card) => {
+          card.hidden = field !== 'all' && card.dataset.field !== field;
+        });
+      }
+
+      filterButtons.forEach((button) => button.addEventListener('click', () => selectField(button.dataset.filter)));
+      document.querySelectorAll('[data-jump]').forEach((button) => button.addEventListener('click', () => {
+        selectField(button.dataset.jump);
+        peopleSection?.scrollIntoView({ behavior: 'smooth' });
+      }));
+
+      const dialog = document.querySelector('.member-dialog');
+      const dialogPortrait = dialog?.querySelector('.dialog-portrait');
+      document.querySelectorAll('.member-open').forEach((button) => button.addEventListener('click', () => {
+        const item = members[Number(button.closest('.member').dataset.index)];
+        dialog.querySelector('.dialog-company').textContent = item.company;
+        dialog.querySelector('.dialog-name').textContent = item.name;
+        dialog.querySelector('.dialog-role').textContent = item.role;
+        dialog.querySelector('.dialog-place').textContent = item.place;
+        dialog.querySelector('.dialog-focus').textContent = item.focus;
+        dialogPortrait.className = `dialog-portrait portrait ${item.portrait}`;
+        dialog.showModal();
+      }));
+      dialog?.querySelector('.dialog-close')?.addEventListener('click', () => dialog.close());
+      dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    </script>
+  </body>
+</html>
