@@ -1,0 +1,16 @@
+/* TEAM */
+Founder: 阿正_Dean
+Handle: root@airdb
+Role: Founder / 全栈黑客
+Location: 未知节点 · Everywhere
+Motto: 以键盘为剑，守护而非破坏。
+
+/* THANKS */
+每一家保持独立、又愿意协作的 OPC。
+
+/* SITE */
+Language: 中文 / English
+Stack: Astro, TypeScript
+Fonts: IBM Plex Mono (self-hosted), system CJK sans
+Standards: HTML5, CSS3, 诚实的占位数据标注
+Contact: team@airdb.team
