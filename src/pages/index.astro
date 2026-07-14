@@ -246,12 +246,12 @@ const structuredData = {
       <small>© 2026 AIRDB Team</small>
     </footer>
 
-    <dialog class="member-dialog">
+    <dialog class="member-dialog" aria-labelledby="dialog-name">
       <button class="dialog-close" aria-label="关闭成员资料">×</button>
       <div class="dialog-portrait portrait p1"></div>
       <div class="dialog-copy">
         <span class="dialog-company"></span>
-        <h2 class="dialog-name"></h2>
+        <h2 class="dialog-name" id="dialog-name"></h2>
         <p class="dialog-role"></p>
         <dl><div><dt>所在地</dt><dd class="dialog-place"></dd></div><div><dt>专长</dt><dd class="dialog-focus"></dd></div><div class="dialog-motto-row" hidden><dt>信条</dt><dd class="dialog-motto"></dd></div></dl>
         <a href="mailto:info@airdb.com">发起协作 <span>→</span></a>
