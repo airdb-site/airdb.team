@@ -4,6 +4,20 @@ import { capabilities, domains, members } from "../data/team";
 
 const filters = [{ id: "all", label: "全部领域" }, ...domains];
 const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "AIRDB Team",
+  url: "https://airdb.team/",
+  email: "team@airdb.team",
+  founder: {
+    "@type": "Person",
+    name: "阿正_Dean",
+    alternateName: "Dean",
+    jobTitle: "Founder",
+    knowsAbout: ["Cybersecurity", "AI Systems", "Infrastructure"],
+  },
+};
 ---
 
 <!doctype html>
@@ -14,8 +28,15 @@ const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
     <meta name="description" content="AIRDB Team 是由独立公司、前沿技术人才与专业能力组成的全球协作网络。" />
     <meta name="theme-color" content="#ffffff" />
     <title>AIRDB Team — 前沿技术人才与独立公司网络</title>
+    <link rel="canonical" href="https://airdb.team/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://airdb.team/" />
+    <meta property="og:title" content="AIRDB Team — 前沿技术人才与独立公司网络" />
+    <meta property="og:description" content="AIRDB Team 是由独立公司、前沿技术人才与专业能力组成的全球协作网络。" />
+    <meta name="twitter:card" content="summary" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/manifest.json" />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body>
     <header class="site-header">
@@ -117,22 +138,49 @@ const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
             <span>搜索成员、公司或专长</span>
             <input id="member-search" type="search" placeholder="输入关键词" autocomplete="off" />
           </label>
-          <p class="result-count" aria-live="polite">{members.length} 个示例档案</p>
+          <p class="result-count" aria-live="polite">{members.length} 位成员</p>
         </div>
         <div class="filters" role="group" aria-label="按技术领域筛选成员">
           {filters.map((field, index) => <button class:list={[index === 0 && "active"]} data-filter={field.id}>{field.label}</button>)}
         </div>
         <div class="member-grid" aria-live="polite">
           {members.map((member, index) => (
-            <article class="member" data-field={member.field} data-index={index} data-search={`${member.name} ${member.company} ${member.role} ${member.place} ${member.focus}`.toLowerCase()}>
-              <button class="member-open" aria-label={`查看 ${member.name} 的详细资料`}>
-                <span class:list={["portrait", member.portrait]} aria-hidden="true"></span>
-                <span class="member-topline"><b>{member.company}</b><i>0{index + 1}</i></span>
-                <span class="member-name">{member.name}</span>
-                <span class="member-role">{member.role}</span>
-                <span class="member-meta"><span>{member.place}</span><span>{member.focus}</span></span>
-                <span class="member-arrow" aria-hidden="true">↗</span>
-              </button>
+            <article
+              class:list={["member", member.founder && "member-founder"]}
+              data-field={member.field}
+              data-index={index}
+              data-search={`${member.name} ${member.company} ${member.role} ${member.place} ${member.focus} ${member.handle ?? ""} ${(member.tags ?? []).join(" ")} founder 创始人`.toLowerCase()}
+            >
+              {member.founder ? (
+                <button class="member-open founder-open" aria-label={`查看创始人 ${member.name} 的详细资料`}>
+                  <span class:list={["founder-portrait", "portrait", member.portrait]} aria-hidden="true"></span>
+                  <span class="founder-body">
+                    <span class="founder-topline"><b>{member.company} · FOUNDER</b><span class="founder-signal" aria-hidden="true"></span><i>00</i></span>
+                    <span class="founder-name">{member.name}<em class="founder-caret" aria-hidden="true"></em></span>
+                    <span class="founder-role">{member.role}</span>
+                    <span class="founder-terminal" aria-hidden="true">
+                      {(member.terminal ?? []).map((line, lineIndex) => (
+                        <span class="t-line" style={`--t:${lineIndex}`}>
+                          <i>$ {line.cmd}</i>
+                          <b>{line.out}</b>
+                        </span>
+                      ))}
+                    </span>
+                    <span class="founder-tags">{(member.tags ?? []).map((tag) => <span>{tag}</span>)}</span>
+                    <span class="founder-meta"><span>{member.place}</span><span>{member.focus}</span></span>
+                  </span>
+                  <span class="member-arrow" aria-hidden="true">↗</span>
+                </button>
+              ) : (
+                <button class="member-open" aria-label={`查看 ${member.name} 的详细资料`}>
+                  <span class:list={["portrait", member.portrait]} aria-hidden="true"></span>
+                  <span class="member-topline"><b>{member.company}</b><i>0{index}</i></span>
+                  <span class="member-name">{member.name}</span>
+                  <span class="member-role">{member.role}</span>
+                  <span class="member-meta"><span>{member.place}</span><span>{member.focus}</span></span>
+                  <span class="member-arrow" aria-hidden="true">↗</span>
+                </button>
+              )}
             </article>
           ))}
         </div>
@@ -142,7 +190,7 @@ const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
           <p>你可以浏览其他领域，或者成为这个能力节点的创建者。</p>
           <button type="button" data-reset-directory>查看全部成员</button>
         </div>
-        <p class="sample-note">第一版使用示例成员档案，用于确认信息结构与视觉方向。</p>
+        <p class="sample-note">创始人档案为真实成员；其余为示例档案，用于确认信息结构与视觉方向。</p>
       </section>
 
       <section class="capability-section" id="capabilities">
@@ -154,7 +202,7 @@ const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
           {capabilities.map((item, index) => (
             <button class={`capability-row ${tones[index]}`} data-jump={item.id}>
               <span class="capability-index">0{index + 1}</span>
-              <strong>{item.name}</strong>
+              <strong>{item.label}</strong>
               <span>{item.en}</span>
               <i style={`--size:${item.count}%`}></i>
               <b>{item.count}</b>
@@ -198,7 +246,7 @@ const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
         <span class="dialog-company"></span>
         <h2 class="dialog-name"></h2>
         <p class="dialog-role"></p>
-        <dl><div><dt>所在地</dt><dd class="dialog-place"></dd></div><div><dt>专长</dt><dd class="dialog-focus"></dd></div></dl>
+        <dl><div><dt>所在地</dt><dd class="dialog-place"></dd></div><div><dt>专长</dt><dd class="dialog-focus"></dd></div><div class="dialog-motto-row" hidden><dt>信条</dt><dd class="dialog-motto"></dd></div></dl>
         <a href="mailto:team@airdb.team">发起协作 <span>→</span></a>
       </div>
     </dialog>
@@ -256,11 +304,27 @@ const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
         dialog.querySelector('.dialog-role').textContent = item.role;
         dialog.querySelector('.dialog-place').textContent = item.place;
         dialog.querySelector('.dialog-focus').textContent = item.focus;
+        const mottoRow = dialog.querySelector('.dialog-motto-row');
+        mottoRow.hidden = !item.motto;
+        dialog.querySelector('.dialog-motto').textContent = item.motto ?? '';
         dialogPortrait.className = `dialog-portrait portrait ${item.portrait}`;
         dialog.showModal();
       }));
       dialog?.querySelector('.dialog-close')?.addEventListener('click', () => dialog.close());
       dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+
+      const founderCard = document.querySelector('.member-founder');
+      if (founderCard && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            founderCard.classList.add('boot');
+            observer.disconnect();
+          }
+        }, { threshold: 0.35 });
+        observer.observe(founderCard);
+      } else {
+        founderCard?.classList.add('boot');
+      }
     </script>
   </body>
 </html>

@@ -6,6 +6,8 @@
   --line: #d9d9d9;
   --pale: #dce5ff;
   --white: #fff;
+  --term: #39f07d;
+  --term-dim: rgba(57, 240, 125, .28);
   --gutter: clamp(22px, 4vw, 68px);
   --max: 1600px;
 }
@@ -127,6 +129,39 @@ main { overflow: hidden; }
 .portrait { display: block; width: 100%; aspect-ratio: 1.35; background-image: url("/images/team/member-atlas.webp"); background-repeat: no-repeat; background-size: 300% 200%; filter: saturate(.78) contrast(1.03); transition: filter .25s ease; }
 .member-open:hover .portrait { filter: saturate(1) contrast(1.02); }
 .p1 { background-position: 0 0; }.p2 { background-position: 50% 0; }.p3 { background-position: 100% 0; }.p4 { background-position: 0 100%; }.p5 { background-position: 50% 100%; }.p6 { background-position: 100% 100%; }
+.p0 { background-image: url("/images/team/founder-dean.svg"); background-position: center; background-size: cover; filter: none; }
+
+/* —— founder feature card —— */
+.member-founder { grid-column: 1 / -1; }
+.founder-open { display: grid; grid-template-columns: minmax(280px, .82fr) 1.18fr; background: #0b120e; color: #f2fff7; transition: background .25s ease; }
+.founder-open:hover { background: #0e1812; }
+.founder-open::after { position: absolute; inset: 0; z-index: 3; background: repeating-linear-gradient(0deg, rgba(0,0,0,.55) 0 1px, transparent 1px 4px); content: ""; opacity: .07; pointer-events: none; }
+.founder-open:hover .founder-portrait, .member-open:hover .p0 { filter: none; }
+.founder-portrait { aspect-ratio: auto; height: 100%; min-height: 460px; border-right: 1px solid var(--term-dim); }
+.founder-body { display: flex; flex-direction: column; min-width: 0; padding: 30px 36px 26px; }
+.founder-topline { display: flex; gap: 14px; align-items: center; color: var(--term); font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: .1em; }
+.founder-topline b { font-weight: 600; }
+.founder-topline i { margin-left: auto; font-style: normal; }
+.founder-signal { width: 6px; height: 6px; border-radius: 50%; background: var(--term); animation: founder-signal 2.2s ease-in-out infinite; }
+.founder-name { display: flex; align-items: center; padding-top: 24px; color: #fff; font-size: clamp(36px, 3.6vw, 58px); font-weight: 600; letter-spacing: -.05em; line-height: 1.05; }
+.founder-caret { width: .38ch; height: .82em; margin-left: 12px; background: var(--term); animation: founder-blink 1.1s steps(2, jump-none) infinite; }
+.founder-role { margin-top: 10px; color: #9fb3a7; font-size: 13px; }
+.founder-terminal { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; padding: 16px 20px 18px; border: 1px solid var(--term-dim); background: #060b08; font-family: "IBM Plex Mono", monospace; font-size: 12px; line-height: 1.5; }
+.founder-terminal::before { display: block; padding-bottom: 10px; border-bottom: 1px solid rgba(57,240,125,.16); color: #6b8577; font-size: 10px; letter-spacing: .08em; content: "dean@airdb — /bin/zsh"; }
+.t-line { display: grid; gap: 2px; }
+.t-line i { color: var(--term); font-style: normal; }
+.t-line b { color: #d7e8dd; font-weight: 400; overflow-wrap: break-word; }
+.member-founder:not(.boot) .t-line { opacity: 0; }
+.member-founder.boot .t-line { animation: t-in .45s ease both; animation-delay: calc(var(--t) * .7s + .25s); }
+.founder-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.founder-tags span { padding: 6px 12px; border: 1px solid var(--term-dim); color: var(--term); font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: .08em; }
+.founder-tags span:first-child { border-color: rgba(255,90,69,.55); color: #ff8a77; }
+.founder-meta { display: flex; justify-content: space-between; gap: 16px; margin-top: auto; padding: 20px 44px 0 0; border-top: 1px solid rgba(57,240,125,.18); color: #9fb3a7; font-size: 11px; }
+.founder-meta span:last-child { text-align: right; }
+.founder-open .member-arrow { color: var(--term); }
+@keyframes founder-blink { 50% { opacity: 0; } }
+@keyframes founder-signal { 0%, 100% { box-shadow: 0 0 0 0 rgba(57,240,125,.5); } 55% { box-shadow: 0 0 0 7px rgba(57,240,125,0); } }
+@keyframes t-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 .member-topline { display: flex; justify-content: space-between; width: 100%; padding: 18px 20px 0; color: var(--blue); font-family: "IBM Plex Mono", monospace; font-size: 10px; font-style: normal; }
 .member-topline i { font-style: normal; }
 .member-name { padding: 26px 20px 0; font-size: clamp(30px, 3vw, 46px); font-weight: 600; letter-spacing: -.05em; }
@@ -205,6 +240,7 @@ footer small { color: #777; font-size: 11px; }
   .hero { grid-template-columns: 1fr; }.hero-copy { min-height: 720px; border-right: 0; }.network-map { min-height: 620px; border-top: 1px solid var(--ink); }
   .intro-strip { grid-template-columns: 1fr 1fr; }.intro-strip a { grid-column: 2; justify-self: start; }
   .member-grid { grid-template-columns: repeat(2, 1fr); }
+  .founder-open { grid-template-columns: minmax(240px, .9fr) 1.1fr; }.founder-portrait { min-height: 420px; }
   .about-section { grid-template-columns: 1fr; }.about-manifesto { min-height: 600px; border-right: 0; border-bottom: 1px solid var(--ink); }
   .join-section { grid-template-columns: 1fr; }.join-section a { justify-self: start; }
   footer { grid-template-columns: 1fr 1fr; }
@@ -222,6 +258,10 @@ footer small { color: #777; font-size: 11px; }
   .people-section, .capability-section { padding-top: 78px; padding-bottom: 78px; }.section-header { grid-template-columns: 1fr; gap: 30px; }.section-header > div { gap: 18px; align-items: flex-start; }.section-header h2 { font-size: 48px; }.section-header > p { font-size: 15px; }
   .directory-tools { grid-template-columns: 1fr; gap: 16px; margin-top: 40px; }.member-search { grid-template-columns: 1fr; gap: 8px; }.result-count { justify-self: start; }.filters { margin-top: 24px; }.filters button { flex: 0 0 auto; }
   .member-grid { grid-template-columns: 1fr; }.portrait { aspect-ratio: 1.2; }.member-name { font-size: 42px; }
+  .founder-open { grid-template-columns: 1fr; }
+  .founder-portrait { height: auto; min-height: 0; aspect-ratio: 1.15; border-right: 0; border-bottom: 1px solid var(--term-dim); }
+  .founder-body { padding: 24px 20px 22px; }.founder-name { font-size: 40px; }.founder-terminal { font-size: 11px; }
+  .founder-meta { padding-right: 36px; }
   .capability-bars { margin-top: 48px; }.capability-row { grid-template-columns: 30px 1fr 46px; gap: 12px; min-height: 80px; }.capability-row > span:nth-of-type(2), .capability-row i { display: none; }.capability-row strong { font-size: 25px; }
   .about-manifesto, .about-copy { padding-top: 76px; padding-bottom: 76px; }.about-manifesto { min-height: 560px; }.about-manifesto h2 { margin-top: 70px; font-size: 58px; }.about-copy > p { font-size: 22px; }
   .join-section { padding-top: 72px; padding-bottom: 72px; }.join-section p { font-size: 48px; }.join-section p span:first-child { white-space: normal; }.join-section a { width: 100%; min-width: 0; }

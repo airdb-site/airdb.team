@@ -14,6 +14,11 @@ export type Member = {
   place: string;
   focus: string;
   portrait: string;
+  founder?: boolean;
+  handle?: string;
+  motto?: string;
+  tags?: string[];
+  terminal?: { cmd: string; out: string }[];
 };
 
 export const domains: Domain[] = [
@@ -37,7 +42,27 @@ export const domains: Domain[] = [
   { id: "climate", label: "气候科技", en: "CLIMATE TECH", count: 14 },
 ];
 
+export const founder: Member = {
+  name: "阿正_Dean",
+  company: "AIRDB",
+  role: "Founder · 全栈黑客",
+  field: "security",
+  place: "未知节点 · Everywhere",
+  focus: "网络安全 · AI 系统 · 基础设施",
+  portrait: "p0",
+  founder: true,
+  handle: "root@airdb",
+  motto: "以键盘为剑，守护而非破坏。",
+  tags: ["红客精神", "极客", "白帽", "开源", "全栈"],
+  terminal: [
+    { cmd: "whoami", out: "dean — founder / builder / red-team mind" },
+    { cmd: "cat /etc/motto", out: "把不可能，当成待办事项。" },
+    { cmd: "uptime", out: "building AIRDB since day 0 — never down" },
+  ],
+};
+
 export const members: Member[] = [
+  founder,
   { name: "林澄", company: "VECTOR INTELLIGENCE", role: "AI Systems Researcher", field: "ai", place: "Singapore", focus: "多模态智能 · 自主系统", portrait: "p1" },
   { name: "Arjun Mehta", company: "ORBITAL FOUNDRY", role: "Aerospace Engineer", field: "aero", place: "Bengaluru", focus: "新型推进 · 飞行器制造", portrait: "p2" },
   { name: "Amara Okafor", company: "HELIX ONE", role: "Biotech Founder", field: "bio", place: "Boston", focus: "合成生物 · 精准诊断", portrait: "p3" },
