@@ -1,0 +1,62 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="页面不存在 — AIRDB Team" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>404 · 节点未找到 — AIRDB Team</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="AIRDB Team 首页">
+        <strong>AIRDB</strong><span>/</span><em>TEAM</em>
+      </a>
+      <span></span>
+      <a class="header-action" href="/#people">浏览成员 <span aria-hidden="true">↘</span></a>
+    </header>
+
+    <main class="notfound">
+      <div class="notfound-inner">
+        <p class="notfound-code" aria-hidden="true">ERR 404 — NODE NOT FOUND</p>
+        <h1>这个节点<br />不在网络中。</h1>
+        <p class="notfound-copy">你要找的页面不存在，或者已经移动到了别的坐标。网络中的其他节点仍在正常运行。</p>
+        <pre class="notfound-trace" aria-hidden="true">$ traceroute ./lost-node
+1  airdb.team  <span>ok</span>
+2  *  *  *  <b>404 — 请求的节点无响应</b></pre>
+        <div class="hero-actions">
+          <a class="button button-primary" href="/">返回首页 <span aria-hidden="true">→</span></a>
+          <a class="button button-quiet" href="/#people">认识网络中的人 <span aria-hidden="true">↘</span></a>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <a class="brand brand-footer" href="/"><strong>AIRDB</strong><span>/</span><em>TEAM</em></a>
+      <p>Independent by design.<br />Connected by ambition.</p>
+      <div><a href="/#people">成员目录</a><a href="/#capabilities">能力地图</a><a href="mailto:team@airdb.team">联系我们</a></div>
+      <small>© 2026 AIRDB Team</small>
+    </footer>
+  </body>
+
+  <style>
+    .notfound { display: grid; place-items: center; min-height: calc(100svh - 74px - 220px); padding: 90px var(--gutter); }
+    .notfound-inner { max-width: 780px; }
+    .notfound-code { margin: 0; color: var(--blue); font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; }
+    .notfound h1 { margin: 26px 0 0; font-size: clamp(52px, 7vw, 104px); font-weight: 600; letter-spacing: -.06em; line-height: 1; }
+    .notfound-copy { max-width: 540px; margin: 26px 0 0; color: var(--muted); font-size: 17px; line-height: 1.7; }
+    .notfound-trace { margin: 34px 0 0; padding: 18px 22px; overflow-x: auto; border: 1px solid var(--ink); background: var(--pale); color: var(--ink); font-family: "IBM Plex Mono", monospace; font-size: 12px; line-height: 1.9; }
+    .notfound-trace span { color: var(--blue); }
+    .notfound-trace b { color: var(--coral); font-weight: 600; }
+    .notfound .hero-actions { margin-top: 40px; }
+    @media (max-width: 680px) {
+      .notfound { min-height: calc(100svh - 64px - 220px); padding-top: 64px; padding-bottom: 64px; }
+    }
+  </style>
+</html>
