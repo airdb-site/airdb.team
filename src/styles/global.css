@@ -282,6 +282,7 @@ footer small { color: #777; font-size: 11px; }
 .dialog-role { margin: 0; color: var(--muted); }
 .dialog-copy dl { margin: 54px 0; border-top: 1px solid var(--ink); }
 .dialog-copy dl div { display: grid; grid-template-columns: 90px 1fr; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.dialog-copy dl div[hidden] { display: none; }
 .dialog-copy dt { color: var(--muted); font-size: 12px; }.dialog-copy dd { margin: 0; font-size: 13px; }
 .dialog-copy a { display: flex; justify-content: space-between; margin-top: auto; padding: 16px 18px; background: var(--blue); color: #fff; font-size: 14px; }
 
