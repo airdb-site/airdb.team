@@ -13,4 +13,4 @@ Language: 中文 / English
 Stack: Astro, TypeScript
 Fonts: IBM Plex Mono (self-hosted), system CJK sans
 Standards: HTML5, CSS3, 诚实的占位数据标注
-Contact: team@airdb.team
+Contact: info@airdb.com
