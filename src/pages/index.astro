@@ -1,9 +1,12 @@
 ---
 import "../styles/global.css";
-import { capabilities, domains, members } from "../data/team";
+import { capabilities, domains, entries, openDomainIds, totalSeats } from "../data/team";
 
-const filters = [{ id: "all", label: "全部领域" }, ...domains];
+const openDomains = domains.filter((domain) => openDomainIds.has(domain.id));
+const filters = [{ id: "all", label: "全部" }, ...openDomains];
 const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
+const pad = (n: number) => String(n).padStart(2, "0");
+const domainLabel = Object.fromEntries(domains.map((d) => [d.id, d.label]));
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -45,17 +48,21 @@ const structuredData = {
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
   <body>
+    <a class="skip-link" href="#people">跳到成员目录</a>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="AIRDB Team 首页">
         <strong>AIRDB</strong><span>/</span><em>TEAM</em>
       </a>
-      <nav aria-label="主导航">
-        <a href="#network">网络</a>
-        <a href="#people">成员</a>
-        <a href="#capabilities">能力</a>
-        <a href="#about">关于</a>
-      </nav>
-      <a class="header-action" href="#people">浏览成员 <span aria-hidden="true">↘</span></a>
+      <details class="site-nav">
+        <summary aria-label="打开导航菜单"><span class="menu-icon" aria-hidden="true"></span></summary>
+        <nav aria-label="主导航">
+          <a href="#network">网络</a>
+          <a href="#people">成员</a>
+          <a href="#capabilities">方向</a>
+          <a href="#about">关于</a>
+          <a class="nav-cta" href="#people">浏览成员 <span aria-hidden="true">↘</span></a>
+        </nav>
+      </details>
     </header>
 
     <main id="top">
@@ -68,11 +75,11 @@ const structuredData = {
             <a class="button button-quiet" href="#about">了解协作方式 <span aria-hidden="true">↘</span></a>
           </div>
           <dl class="hero-stats">
-            <div><dt>240<sup>+</sup></dt><dd>独立公司</dd></div>
-            <div><dt>32</dt><dd>国家与地区</dd></div>
-            <div><dt>18</dt><dd>前沿技术领域</dd></div>
+            <div><dt>01</dt><dd>创始人已就位</dd></div>
+            <div><dt>{totalSeats}</dt><dd>首批开放席位</dd></div>
+            <div><dt>18</dt><dd>规划技术领域</dd></div>
           </dl>
-          <p class="hero-note">网络规模为建设中的阶段目标，随成员加入持续更新。</p>
+          <p class="hero-note">网络正在组建第一批成员。以上为真实开放席位，非既有规模。</p>
         </div>
 
         <div class="network-map cell-map" aria-label="AIRDB Team 细胞式能力网络示意图">
@@ -117,13 +124,19 @@ const structuredData = {
           <button class="map-node node-materials" data-jump="materials"><span>LATTICE</span><strong>先进材料</strong></button>
           <button class="map-node node-health" data-jump="health"><span>CLINICA</span><strong>医疗健康</strong></button>
           <div class="map-index"><span>LIVING CAPABILITY NETWORK</span><b>06 / 18</b></div>
-          <div class="cell-domain-ticker" aria-label="18 个前沿技术领域">
+          <div class="cell-domain-ticker" aria-label="规划中的 18 个前沿技术领域">
             <div class="domain-track">
-              {[...domains, ...domains].map((domain, index) => (
-                <button type="button" data-jump={domain.id} aria-hidden={index >= domains.length ? "true" : undefined} tabindex={index >= domains.length ? "-1" : undefined}>
-                  <i>{String((index % domains.length) + 1).padStart(2, "0")}</i>{domain.label}
-                </button>
-              ))}
+              {[...domains, ...domains].map((domain, index) => {
+                const duplicate = index >= domains.length;
+                const num = pad((index % domains.length) + 1);
+                return openDomainIds.has(domain.id) ? (
+                  <button type="button" class="domain-open" data-jump={domain.id} aria-hidden={duplicate ? "true" : undefined} tabindex={duplicate ? "-1" : undefined}>
+                    <i>{num}</i>{domain.label}
+                  </button>
+                ) : (
+                  <span class="domain-planned" aria-hidden={duplicate ? "true" : undefined}><i>{num}</i>{domain.label}</span>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -138,81 +151,91 @@ const structuredData = {
       <section class="people-section" id="people">
         <div class="section-header">
           <div><span class="section-number">01</span><h2>认识网络中的人</h2></div>
-          <p>发现每一家 OPC 背后的专业能力、研究方向与可协作领域。</p>
+          <p>创始人已就位，首批席位正在开放。OPC 指独立经营的一人公司（One-Person Company）。</p>
         </div>
         <div class="directory-tools">
           <label class="member-search" for="member-search">
             <span>搜索成员、公司或专长</span>
             <input id="member-search" type="search" placeholder="输入关键词" autocomplete="off" />
           </label>
-          <p class="result-count" aria-live="polite">{members.length} 位成员</p>
+          <p class="result-count" aria-live="polite">{entries.length} / {entries.length} 项</p>
         </div>
-        <div class="filters" role="group" aria-label="按技术领域筛选成员">
-          {filters.map((field, index) => <button class:list={[index === 0 && "active"]} data-filter={field.id}>{field.label}</button>)}
+        <div class="filters" role="group" aria-label="按技术领域筛选">
+          {filters.map((field, index) => (
+            <button type="button" class:list={[index === 0 && "active"]} data-filter={field.id} aria-pressed={index === 0 ? "true" : "false"}>{field.label}</button>
+          ))}
         </div>
         <div class="member-grid" aria-live="polite">
-          {members.map((member, index) => (
-            <article
-              class:list={["member", member.founder && "member-founder"]}
-              data-field={member.field}
-              data-index={index}
-              data-search={`${member.name} ${member.company} ${member.role} ${member.place} ${member.focus} ${member.handle ?? ""} ${(member.tags ?? []).join(" ")} founder 创始人`.toLowerCase()}
-            >
-              {member.founder ? (
-                <button class="member-open founder-open" aria-label={`查看创始人 ${member.name} 的详细资料`}>
-                  <span class:list={["founder-portrait", "portrait", member.portrait]} aria-hidden="true"></span>
+          {entries.map((entry, index) => (
+            entry.kind === "founder" ? (
+              <article
+                class="member member-founder"
+                data-field={entry.field}
+                data-index={index}
+                data-search={`${entry.name} ${entry.company} ${entry.role} ${entry.place} ${entry.focus} ${entry.handle} ${entry.tags.join(" ")} founder 创始人`.toLowerCase()}
+              >
+                <button class="member-open founder-open" aria-label={`查看创始人 ${entry.name} 的详细资料`}>
+                  <span class="founder-portrait portrait p0" aria-hidden="true"></span>
                   <span class="founder-body">
-                    <span class="founder-topline"><b>{member.company} · FOUNDER</b><span class="founder-signal" aria-hidden="true"></span><i>00</i></span>
-                    <span class="founder-name">{member.name}<em class="founder-caret" aria-hidden="true"></em></span>
-                    <span class="founder-role">{member.role}</span>
+                    <span class="founder-topline"><b>{entry.company} · FOUNDER</b><span class="founder-signal" aria-hidden="true"></span><i>00</i></span>
+                    <span class="founder-name">{entry.name}<em class="founder-caret" aria-hidden="true"></em></span>
+                    <span class="founder-role">{entry.role}</span>
                     <span class="founder-terminal" aria-hidden="true">
-                      {(member.terminal ?? []).map((line, lineIndex) => (
+                      {entry.terminal.map((line, lineIndex) => (
                         <span class="t-line" style={`--t:${lineIndex}`}>
                           <i>$ {line.cmd}</i>
                           <b>{line.out}</b>
                         </span>
                       ))}
                     </span>
-                    <span class="founder-tags">{(member.tags ?? []).map((tag) => <span>{tag}</span>)}</span>
-                    <span class="founder-meta"><span>{member.place}</span><span>{member.focus}</span></span>
+                    <span class="founder-tags">{entry.tags.map((tag) => <span>{tag}</span>)}</span>
+                    <span class="founder-meta"><span>{entry.place}</span><span>{entry.focus}</span></span>
                   </span>
                   <span class="member-arrow" aria-hidden="true">↗</span>
                 </button>
-              ) : (
-                <button class="member-open" aria-label={`查看 ${member.name} 的详细资料`}>
-                  <span class:list={["portrait", member.portrait]} aria-hidden="true"></span>
-                  <span class="member-topline"><b>{member.company}</b><i>0{index}</i></span>
-                  <span class="member-name">{member.name}</span>
-                  <span class="member-role">{member.role}</span>
-                  <span class="member-meta"><span>{member.place}</span><span>{member.focus}</span></span>
+              </article>
+            ) : (
+              <article
+                class="member member-opening"
+                data-field={entry.field}
+                data-index={index}
+                data-search={`${entry.seat} ${domainLabel[entry.field]} ${entry.focus} ${entry.place} ${entry.status} 招募 opening 席位`.toLowerCase()}
+              >
+                <button class="member-open opening-open" aria-label={`了解招募位：${entry.seat}`}>
+                  <span class="opening-body">
+                    <span class="member-topline"><b>{domainLabel[entry.field]} · 招募位</b><i>{pad(index)}</i></span>
+                    <span class="opening-seat">{entry.seat}</span>
+                    <span class="opening-status"><span class="opening-dot" aria-hidden="true"></span>{entry.status}</span>
+                    <span class="member-meta"><span>{entry.place}</span><span>{entry.focus}</span></span>
+                  </span>
                   <span class="member-arrow" aria-hidden="true">↗</span>
                 </button>
-              )}
-            </article>
+              </article>
+            )
           ))}
         </div>
         <div class="empty-state" hidden>
-          <span>NO MATCHING OPC</span>
-          <h3>这个领域正在等待第一位成员。</h3>
-          <p>你可以浏览其他领域，或者成为这个能力节点的创建者。</p>
-          <button type="button" data-reset-directory>查看全部成员</button>
+          <span>NO OPEN SEAT</span>
+          <h3>这个领域还没有开放席位。</h3>
+          <p>它已在规划版图中。你可以浏览正在招募的领域，或直接来信提出你的方向。</p>
+          <button type="button" data-reset-directory>查看全部开放席位</button>
         </div>
-        <p class="sample-note">创始人档案为真实成员；其余为示例档案，用于确认信息结构与视觉方向。</p>
+        <p class="sample-note">创始人为真实成员；招募位为真实开放席位，尚未有人入驻。</p>
       </section>
 
       <section class="capability-section" id="capabilities">
         <div class="section-header capability-heading">
-          <div><span class="section-number">02</span><h2>前沿能力，按需组合</h2></div>
-          <p>从计算到生命科学，从天空到深海。AIRDB Team 让不同尺度的技术能力围绕真实问题快速形成协作单元。</p>
+          <div><span class="section-number">02</span><h2>首批优先开放的方向</h2></div>
+          <p>从计算到生命科学，从天空到深海。条形代表首批投入优先级，右侧为已招募 / 目标席位。</p>
         </div>
         <div class="capability-bars">
           {capabilities.map((item, index) => (
-            <button class={`capability-row ${tones[index]}`} data-jump={item.id}>
-              <span class="capability-index">0{index + 1}</span>
+            <button type="button" class={`capability-row ${tones[index]}`} data-jump={item.id}>
+              <span class="capability-index">{pad(index + 1)}</span>
               <strong>{item.label}</strong>
               <span>{item.en}</span>
-              <i style={`--size:${item.count}%`}></i>
-              <b>{item.count}</b>
+              <i style={`--size:${item.weight}%`}></i>
+              <b>0 / {item.seats}</b>
             </button>
           ))}
         </div>
@@ -235,32 +258,50 @@ const structuredData = {
 
       <section class="join-section">
         <p><span>如果你正在独立构建前沿技术，</span><span>我们想认识你。</span></p>
-        <a href="mailto:info@airdb.com">加入 AIRDB Team <span aria-hidden="true">→</span></a>
+        <a href="mailto:info@airdb.com?subject=%E5%8A%A0%E5%85%A5%20AIRDB%20Team">申请首批席位 <span aria-hidden="true">→</span></a>
       </section>
     </main>
 
     <footer>
-      <a class="brand brand-footer" href="#top"><strong>AIRDB</strong><span>/</span><em>TEAM</em></a>
-      <p>Independent by design.<br />Connected by ambition.</p>
-      <div><a href="#people">成员目录</a><a href="#capabilities">能力地图</a><a href="mailto:info@airdb.com">联系我们</a></div>
+      <div class="footer-brand">
+        <a class="brand brand-footer" href="#top"><strong>AIRDB</strong><span>/</span><em>TEAM</em></a>
+        <p>Independent by design.<br />Connected by ambition.</p>
+        <p class="footer-parent">AIRDB Team 是 AIRDB 的人才网络，连接集团内独立经营的一人公司。</p>
+      </div>
+      <div class="footer-links">
+        <b>本站</b>
+        <a href="#people">成员与席位</a>
+        <a href="#capabilities">开放方向</a>
+        <a href="mailto:info@airdb.com">联系我们</a>
+      </div>
+      <div class="footer-links">
+        <b>AIRDB 生态</b>
+        <a href="https://airdb.com" rel="noopener">airdb.com · 主站</a>
+        <a href="https://airdb.group" rel="noopener">airdb.group · 集团</a>
+        <a href="https://airdb.fund" rel="noopener">airdb.fund · 基金会</a>
+      </div>
       <small>© 2026 AIRDB Team</small>
     </footer>
 
     <dialog class="member-dialog" aria-labelledby="dialog-name">
-      <button class="dialog-close" aria-label="关闭成员资料">×</button>
-      <div class="dialog-portrait portrait p1"></div>
+      <button class="dialog-close" aria-label="关闭资料">×</button>
+      <div class="dialog-portrait portrait p0">
+        <span class="dialog-seat-mark" aria-hidden="true">SEAT<br />OPEN</span>
+      </div>
       <div class="dialog-copy">
         <span class="dialog-company"></span>
         <h2 class="dialog-name" id="dialog-name"></h2>
         <p class="dialog-role"></p>
         <dl><div><dt>所在地</dt><dd class="dialog-place"></dd></div><div><dt>专长</dt><dd class="dialog-focus"></dd></div><div class="dialog-motto-row" hidden><dt>信条</dt><dd class="dialog-motto"></dd></div></dl>
-        <a href="mailto:info@airdb.com">发起协作 <span>→</span></a>
+        <a class="dialog-cta" href="mailto:info@airdb.com"><span class="dialog-cta-label">发起协作</span> <span aria-hidden="true">→</span></a>
       </div>
     </dialog>
 
-    <script define:vars={{ members }}>
+    <script define:vars={{ entries, domainLabel }}>
       const filterButtons = document.querySelectorAll('[data-filter]');
+      const validFilters = new Set(Array.from(filterButtons, (button) => button.dataset.filter));
       const cards = document.querySelectorAll('.member');
+      const total = cards.length;
       const peopleSection = document.querySelector('#people');
       const searchInput = document.querySelector('#member-search');
       const emptyState = document.querySelector('.empty-state');
@@ -276,54 +317,93 @@ const structuredData = {
           card.hidden = !(fieldMatches && searchMatches);
           if (!card.hidden) visibleCount += 1;
         });
-        filterButtons.forEach((button) => button.classList.toggle('active', button.dataset.filter === activeField));
+        filterButtons.forEach((button) => {
+          const on = button.dataset.filter === activeField;
+          button.classList.toggle('active', on);
+          button.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
         emptyState.hidden = visibleCount > 0;
-        resultCount.textContent = `${visibleCount} 个匹配档案`;
+        resultCount.textContent = `${visibleCount} / ${total} 项`;
       }
 
-      function selectField(field) {
-        activeField = field;
+      // Filter and search are independent facets; changing one no longer wipes the other.
+      function syncHash() {
+        const parts = [];
+        if (activeField !== 'all') parts.push(activeField);
+        if (query) parts.push('q=' + encodeURIComponent(query));
+        const hash = parts.length ? '#people/' + parts.join('/') : '#people';
+        history.replaceState(null, '', hash);
+      }
+
+      function selectField(field, { scroll = false } = {}) {
+        activeField = validFilters.has(field) ? field : 'all';
+        updateDirectory();
+        syncHash();
+        if (scroll) peopleSection?.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function readHash() {
+        const match = location.hash.match(/^#people(?:\/(.*))?$/);
+        if (!match) return;
+        activeField = 'all';
         query = '';
-        searchInput.value = '';
+        (match[1] || '').split('/').forEach((part) => {
+          if (part.startsWith('q=')) query = decodeURIComponent(part.slice(2)).toLowerCase();
+          else if (validFilters.has(part)) activeField = part;
+        });
+        if (searchInput) searchInput.value = query;
         updateDirectory();
       }
 
       filterButtons.forEach((button) => button.addEventListener('click', () => selectField(button.dataset.filter)));
       searchInput?.addEventListener('input', (event) => {
-        activeField = 'all';
         query = event.currentTarget.value.trim().toLowerCase();
         updateDirectory();
+        syncHash();
       });
-      document.querySelector('[data-reset-directory]')?.addEventListener('click', () => selectField('all'));
+      document.querySelector('[data-reset-directory]')?.addEventListener('click', () => {
+        query = '';
+        if (searchInput) searchInput.value = '';
+        selectField('all');
+      });
       document.addEventListener('click', (event) => {
         const jumpTarget = event.target.closest('[data-jump]');
         if (!jumpTarget) return;
-        selectField(jumpTarget.dataset.jump);
-        peopleSection?.scrollIntoView({ behavior: 'smooth' });
+        query = '';
+        if (searchInput) searchInput.value = '';
+        selectField(jumpTarget.dataset.jump, { scroll: true });
       });
 
       const dialog = document.querySelector('.member-dialog');
       const dialogPortrait = dialog?.querySelector('.dialog-portrait');
+      const dialogCta = dialog?.querySelector('.dialog-cta');
       document.querySelectorAll('.member-open').forEach((button) => button.addEventListener('click', () => {
-        const item = members[Number(button.closest('.member').dataset.index)];
-        dialog.querySelector('.dialog-company').textContent = item.company;
-        dialog.querySelector('.dialog-name').textContent = item.name;
-        dialog.querySelector('.dialog-role').textContent = item.role;
+        const item = entries[Number(button.closest('.member').dataset.index)];
+        const isFounder = item.kind === 'founder';
+        dialog.classList.toggle('dialog-opening', !isFounder);
+        dialog.querySelector('.dialog-company').textContent = isFounder ? item.company + ' · FOUNDER' : domainLabel[item.field] + ' · 招募位';
+        dialog.querySelector('.dialog-name').textContent = isFounder ? item.name : item.seat;
+        dialog.querySelector('.dialog-role').textContent = isFounder ? item.role : item.status;
         dialog.querySelector('.dialog-place').textContent = item.place;
         dialog.querySelector('.dialog-focus').textContent = item.focus;
         const mottoRow = dialog.querySelector('.dialog-motto-row');
-        mottoRow.hidden = !item.motto;
-        dialog.querySelector('.dialog-motto').textContent = item.motto ?? '';
-        dialogPortrait.className = `dialog-portrait portrait ${item.portrait}`;
+        mottoRow.hidden = isFounder ? false : true;
+        dialog.querySelector('.dialog-motto').textContent = isFounder ? item.motto : '';
+        dialogPortrait.className = isFounder ? 'dialog-portrait portrait p0' : 'dialog-portrait';
+        dialogCta.querySelector('.dialog-cta-label').textContent = isFounder ? '发起协作' : '应聘这个席位';
+        dialogCta.href = isFounder ? 'mailto:info@airdb.com' : 'mailto:info@airdb.com?subject=' + encodeURIComponent('应聘：' + item.seat);
         dialog.showModal();
       }));
       dialog?.querySelector('.dialog-close')?.addEventListener('click', () => dialog.close());
       dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 
+      readHash();
+      window.addEventListener('hashchange', readHash);
+
       const founderCard = document.querySelector('.member-founder');
       if (founderCard && 'IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
+        const observer = new IntersectionObserver((observed) => {
+          if (observed.some((entry) => entry.isIntersecting)) {
             founderCard.classList.add('boot');
             observer.disconnect();
           }
