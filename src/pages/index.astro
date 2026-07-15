@@ -4,7 +4,7 @@ import { capabilities, domains, entries, openDomainIds, totalSeats } from "../da
 
 const openDomains = domains.filter((domain) => openDomainIds.has(domain.id));
 const filters = [{ id: "all", label: "全部" }, ...openDomains];
-const tones = ["blue", "coral", "dark", "pale", "blue", "coral"];
+const tones = ["blue", "coral", "dark", "pale"];
 const pad = (n: number) => String(n).padStart(2, "0");
 const domainLabel = Object.fromEntries(domains.map((d) => [d.id, d.label]));
 const structuredData = {
@@ -123,7 +123,7 @@ const structuredData = {
           <button class="map-node node-ocean" data-jump="ocean"><span>PELAGIC</span><strong>航海科技</strong></button>
           <button class="map-node node-materials" data-jump="materials"><span>LATTICE</span><strong>先进材料</strong></button>
           <button class="map-node node-health" data-jump="health"><span>CLINICA</span><strong>医疗健康</strong></button>
-          <div class="map-index"><span>LIVING CAPABILITY NETWORK</span><b>06 / 18</b></div>
+          <div class="map-index"><span>LIVING CAPABILITY NETWORK</span><b>{pad(openDomains.length)} / {domains.length}</b></div>
           <div class="cell-domain-ticker" aria-label="规划中的 18 个前沿技术领域">
             <div class="domain-track">
               {[...domains, ...domains].map((domain, index) => {
@@ -230,7 +230,7 @@ const structuredData = {
         </div>
         <div class="capability-bars">
           {capabilities.map((item, index) => (
-            <button type="button" class={`capability-row ${tones[index]}`} data-jump={item.id}>
+            <button type="button" class={`capability-row ${tones[index % tones.length]}`} data-jump={item.id}>
               <span class="capability-index">{pad(index + 1)}</span>
               <strong>{item.label}</strong>
               <span>{item.en}</span>
