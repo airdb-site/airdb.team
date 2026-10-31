@@ -358,3 +358,5 @@ footer small { align-self: end; color: #777; font-size: 11px; }
   footer { grid-template-columns: 1fr; }
   .member-dialog[open] { display: block; }.dialog-portrait { min-height: 330px; }.dialog-copy { padding: 34px 24px; }.dialog-copy h2 { margin-top: 30px; font-size: 44px; }
 }
+
+footer small { color: #929292; }

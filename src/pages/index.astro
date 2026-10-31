@@ -339,7 +339,7 @@ const structuredData = {
         activeField = validFilters.has(field) ? field : 'all';
         updateDirectory();
         syncHash();
-        if (scroll) peopleSection?.scrollIntoView({ behavior: 'smooth' });
+        if (scroll) peopleSection?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
       }
 
       function readHash() {
@@ -348,7 +348,10 @@ const structuredData = {
         activeField = 'all';
         query = '';
         (match[1] || '').split('/').forEach((part) => {
-          if (part.startsWith('q=')) query = decodeURIComponent(part.slice(2)).toLowerCase();
+          if (part.startsWith('q=')) {
+            try { query = decodeURIComponent(part.slice(2)).toLowerCase(); }
+            catch { query = ''; }
+          }
           else if (validFilters.has(part)) activeField = part;
         });
         if (searchInput) searchInput.value = query;
@@ -397,6 +400,13 @@ const structuredData = {
       dialog?.querySelector('.dialog-close')?.addEventListener('click', () => dialog.close());
       dialog?.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
 
+      const mobileNav = document.querySelector('.site-nav');
+      mobileNav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => mobileNav.removeAttribute('open')));
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && mobileNav?.hasAttribute('open')) {
+          mobileNav.removeAttribute('open'); mobileNav.querySelector('summary')?.focus();
+        }
+      });
       readHash();
       window.addEventListener('hashchange', readHash);
 
