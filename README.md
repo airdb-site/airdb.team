@@ -1,30 +1,19 @@
 # AIRDB Team
 
-AIRDB Team 是一个基于 Astro 的静态团队网络站点，用于展示集团中的独立公司、前沿技术人才、能力领域与协作方式。
+人物与共同创造的展示站：各美其美、美人之美、美美与共。当前展示一位已确认身份的创始人 Dean，使用用户认可的 AI 编辑插画，不虚构其他成员或合作成果。
 
-## 本地开发
+## 开发
 
-```bash
-pnpm install
-pnpm dev
-```
+Node 26，pnpm 11.9.0。`pnpm install --frozen-lockfile`，`pnpm dev`，`pnpm build`。
 
-## 构建
+## 主要文件
 
-```bash
-pnpm build
-```
+- `src/data/people.ts`：人物介绍、关注方向与项目链接。
+- `src/pages/index.astro`：首页，人物、欣赏差异、创造方向、协作与联系。
+- `src/styles/people.css`：人物展示风格，在原有自托管字体与品牌基础上扩展。
+- `static/images/team/dean-editorial-v1.png`：AI 艺术肖像，非真人还原。
+- `src/data/team.ts`：历史招募数据，当前首页不使用；恢复使用前需重新确认岗位真实性与统计口径。
 
-构建产物输出到 `dist/`。
+增加成员时需确认本人资料、形象授权与作品出处。没有真实资料时不生成虚构在职成员；合作故事只记录实际发生的协作。
 
-## 目录
-
-- `src/pages/index.astro`：首页结构与交互
-- `src/pages/404.astro`：品牌化 404 页
-- `src/data/team.ts`：领域、成员和能力数据；创始人档案在 `founder` 对象（人设文案：motto / tags / terminal）
-- `src/styles/global.css`：全局设计系统与响应式样式（含创始人特设卡的终端主题）
-- `static/images/team/`：团队图像；`founder-dean.svg` 为创始人肖像
-- `static/fonts/`：自托管 IBM Plex Mono（400/500/600，latin + latin-ext）
-- `images/`：设计概念与视觉基准
-
-创始人档案为真实成员；其余成员档案为示例数据，后续可以替换为 CMS 或数据库数据源。hero 区的网络规模数字是建设目标，有真实数据后请一并更新 `index.astro` 中的注记。
+首页保留 `#people`、`#capabilities`、`#about`、`#network` 兼容入口。联系使用邮件，不依赖表单后端。GitHub Pages 部署流程保持不变。
