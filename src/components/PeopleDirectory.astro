@@ -1,0 +1,55 @@
+---
+import { people, directoryFields } from '../data/people';
+import PersonCard from './PersonCard.astro';
+---
+<div class="people-directory" data-people-directory>
+  <div class="directory-controls" hidden>
+    <div class="directory-search-row"><label for="people-search">找到你想认识的人<input id="people-search" type="search" placeholder="搜索姓名、专长、项目或个人介绍" autocomplete="off" aria-controls="people-grid" /></label><p class="directory-count" role="status" aria-live="polite" aria-atomic="true">{people.length} / {people.length} 位成员</p></div>
+    <div class="directory-filters" role="group" aria-label="按专业领域筛选"><button type="button" data-person-field="all" aria-pressed="true">全部</button>{directoryFields.map(field=><button type="button" data-person-field={field.id} aria-pressed="false">{field.label}</button>)}</div>
+    <p class="directory-hint">每个人可以有多个领域。领域筛选与关键词搜索可同时使用。</p>
+  </div>
+  <div id="people-grid" class="people-grid">{people.map(person=><PersonCard person={person}/>)}</div>
+  <div class="directory-empty" hidden><h3>暂时没有匹配的人。</h3><p>试试其他关键词或领域，或者清除条件看看全部成员。</p><button type="button" class="people-primary" data-clear-people>清除搜索与筛选 ↗</button></div>
+  <script type="application/json" data-people-search-data set:html={JSON.stringify(people).replace(/</g, '\\u003c')} />
+</div>
+<script>
+  import { matchesPerson } from '../data/directory';
+  import type { DirectoryEntry } from '../data/directory';
+  const directory = document.querySelector<HTMLElement>('[data-people-directory]');
+  if (directory) {
+    const controls = directory.querySelector<HTMLElement>('.directory-controls')!;
+    const search = directory.querySelector<HTMLInputElement>('#people-search')!;
+    const count = directory.querySelector<HTMLElement>('.directory-count')!;
+    const empty = directory.querySelector<HTMLElement>('.directory-empty')!;
+    const buttons = [...directory.querySelectorAll<HTMLButtonElement>('[data-person-field]')];
+    const cards = [...directory.querySelectorAll<HTMLElement>('[data-person-id]')];
+    const people = JSON.parse(directory.querySelector('[data-people-search-data]')!.textContent!) as (DirectoryEntry & { id: string })[];
+    const byId = new Map(people.map(person=>[person.id,person]));
+    const validFields = new Set(buttons.map(button=>button.dataset.personField));
+    const initial = new URLSearchParams(location.search);
+    let field = validFields.has(initial.get('field') || '') ? initial.get('field')! : 'all';
+    search.value = initial.get('q') || '';
+    function update(persist = true) {
+      let visible = 0;
+      for (const card of cards) {
+        const person = byId.get(card.dataset.personId!)!;
+        card.hidden = !matchesPerson(person,field,search.value);
+        if (!card.hidden) visible++;
+      }
+      for (const button of buttons) button.setAttribute('aria-pressed',String(button.dataset.personField===field));
+      count.textContent = `${visible} / ${people.length} 位成员`;
+      empty.hidden = visible > 0;
+      if (persist) {
+        const url = new URL(location.href);
+        if (field==='all') url.searchParams.delete('field'); else url.searchParams.set('field',field);
+        if (search.value.trim()) url.searchParams.set('q',search.value.trim()); else url.searchParams.delete('q');
+        history.replaceState(null,'',url);
+      }
+    }
+    for (const button of buttons) button.addEventListener('click',()=>{field=button.dataset.personField!;update();});
+    search.addEventListener('input',()=>update());
+    directory.querySelector('[data-clear-people]')?.addEventListener('click',()=>{field='all';search.value='';update();search.focus();});
+    update(false);
+    controls.hidden=false;
+  }
+</script>
