@@ -1,19 +1,25 @@
 name: Deploy Docs
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 
 concurrency:
-  group: gh-pages-deploy
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy-gh-pages:
+  deploy-pages:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -34,11 +40,14 @@ jobs:
           make install
           make build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          force_orphan: true
-          publish_branch: gh-pages
-          publish_dir: dist
-          cname: airdb.team
+          path: dist
+
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
